@@ -9,9 +9,9 @@ const webSocketServer = new WebSocket.Server({ port: port }, () => {
 // Handle connection event.
 webSocketServer.on('connection', (webSocket) => {
   webSocket.on('message', (data) => {
-    console.log('data received %o' + data);
+    console.log('Data received: ' + data);
     // Send the message back to the same client.
-    webSocket.send(data);
+    webSocket.send(data.toString());
   });
 });
 
