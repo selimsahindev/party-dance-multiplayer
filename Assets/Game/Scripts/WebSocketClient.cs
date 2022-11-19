@@ -2,33 +2,40 @@ using WebSocketSharp;
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Events;
 
-namespace InfiniteChocolate
+namespace Game.Network
 {
     public class WebSocketClient : MonoBehaviour
     {
         [Min(3f), SerializeField] private float autoReconnectWaitTime = 5f;
 
-        private WebSocket ws;
+        public WebSocket ws { get; private set; }
+
         private Coroutine autoReconnect;
+
+        public static UnityAction<string> OnMessage;
+        public static WebSocketClient Instance;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+        }
 
         private void Start()
         {
-            // Create socket instance.
-            ws = new WebSocket("ws://localhost:5000");
+            using (ws = new WebSocket("ws://localhost:5000"))
+            {            
+                // Register event handlers.
+                ws.OnMessage += HandleOnMessage;
+                ws.OnOpen += HandleOnOpen;
+                ws.OnClose += HandleOnClose;
 
-            // Register event handlers.
-            ws.OnMessage += HandleOnMessage;
-            ws.OnOpen += HandleOnOpen;
-            ws.OnClose += HandleOnClose;
-
-            // Establish connection.
-            ws.Connect();
-        
-            // If the connection did not start, try to connect again.
-            if (ws.ReadyState != WebSocketState.Open)
-            {
-                StartAutoReconnect();
+                // Establish connection.
+                ws.Connect();
             }
         }
 
@@ -43,17 +50,19 @@ namespace InfiniteChocolate
 
         private void SendTestMessage()
         {
+            Debug.Log("SendTestMessage Called.");
             if (ws != null)
             {
                 try
                 {
-                    ws.Send("Hello From The Unity.");
+                    ws.Send("Hello From The Unity. (Web Socket Client)");
                 }
                 catch (Exception e)
                 {
                     Debug.LogWarning(e.Message);
                 }
             }
+            Debug.Log("SendTestMessage End.");
         }
 
         #region Auto Reconnect
@@ -107,6 +116,7 @@ namespace InfiniteChocolate
 
         private void HandleOnMessage(object sender, MessageEventArgs e)
         {
+            OnMessage?.Invoke(e.Data);
             Debug.Log($"Message received from: {((WebSocket)sender).Url}. Data: {e.Data}");
         }
         #endregion

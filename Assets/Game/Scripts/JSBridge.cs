@@ -10,6 +10,21 @@ public class JSBridge : MonoBehaviour
     private static extern void Send(string message);
 #endif
 
+    public static JSBridge Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
