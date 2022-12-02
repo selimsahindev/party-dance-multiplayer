@@ -1,8 +1,8 @@
 const WebSocket = require('ws');
-const port = 5000;
+const port = 5001;
 
 // Run the server.
-const webSocketServer = new WebSocket.Server({ port: 5000 }, () => {
+const webSocketServer = new WebSocket.Server({ port: port }, () => {
   console.log(`web socket server started.`);
 });
 

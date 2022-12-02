@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   webSocketDomain: localhost
-  webSocketPort: 5000
+  webSocketPort: 5001
