@@ -46,12 +46,12 @@ namespace Game.Core
         {
             if (GUI.Button(new Rect(10f, 75f, 250f, 50), "Play Dance Animations"))
             {
-                NativeWebSocketClient.Instance.SendWebSocketMessage("PlayAnimation");
+                NetworkManager.Instance.SendWebSocketMessage("PlayAnimation");
             }
 
             if (GUI.Button(new Rect(10f, 135f, 250f, 50), "Stop Dance Animations"))
             {
-                NativeWebSocketClient.Instance.SendWebSocketMessage("StopAnimation");
+                NetworkManager.Instance.SendWebSocketMessage("StopAnimation");
             }
         }
 

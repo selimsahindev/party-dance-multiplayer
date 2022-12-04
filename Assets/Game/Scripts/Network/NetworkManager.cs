@@ -5,31 +5,35 @@ using Game.Constants;
 
 namespace Game.Network
 {
-    public class NativeWebSocketClient : MonoBehaviour
+    public class NetworkManager : MonoBehaviour
     {
         public WebSocket websocket { get; private set; }
         public static UnityAction<string> OnMessage;
-        public static NativeWebSocketClient Instance;
+        public static NetworkManager Instance;
 
-        private Settings settings;
+        private NetworkSettings settings;
 
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
+                DontDestroyOnLoad(this);
+                settings = Resources.Load<NetworkSettings>("NetworkSettings");
             }
-
-            settings = Resources.Load<Settings>("GameSettings");
+            else
+            {
+                Destroy(this);
+            }
         }
 
         private async void Start()
         {
             websocket = new WebSocket(settings.WebSocketURL);
 
-            websocket.OnOpen += () => Debug.Log("(WebSocket) Connection Open.");
-            websocket.OnError += (e) => Debug.Log("(WebSocket) Error! " + e);
-            websocket.OnClose += (e) => Debug.Log("(WebSocket) Connection Closed.");
+            websocket.OnOpen += () => Debug.Log("WebSocket: Connection Open.");
+            websocket.OnError += (e) => Debug.Log("WebSocket: Error! " + e);
+            websocket.OnClose += (e) => Debug.Log("WebSocket: Connection Closed.");
 
             websocket.OnMessage += (bytes) =>
             {
@@ -37,19 +41,18 @@ namespace Game.Network
                 string message = System.Text.Encoding.UTF8.GetString(bytes);
                 OnMessage?.Invoke(message);
 
-                Debug.Log("(WebSocket) Message Received: " + message);
+                Debug.Log("WebSocket: Message Received: " + message);
             };
 
-            // waiting for messages
             await websocket.Connect();
         }
 
+#if !UNITY_WEBGL || UNITY_EDITOR
         private void Update()
         {
-#if !UNITY_WEBGL || UNITY_EDITOR
             websocket.DispatchMessageQueue();
-#endif
         }
+#endif
 
         public async void SendWebSocketMessage(string message)
         {

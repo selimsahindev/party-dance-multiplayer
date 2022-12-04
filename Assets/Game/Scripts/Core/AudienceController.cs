@@ -16,7 +16,7 @@ namespace Game.Core
 
         private void Start()
         {
-            NativeWebSocketClient.OnMessage += HandleOnMessage;
+            NetworkManager.OnMessage += HandleOnMessage;
         }
 
         private void Update()
