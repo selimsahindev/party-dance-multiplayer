@@ -1,3 +1,4 @@
+using Game.Controllers;
 using UnityEngine;
 using Game.Network;
 using Game.Events;
@@ -9,9 +10,12 @@ namespace Game.Core
         private Animator animator;
         private bool isDancing = false;
 
+        private IMistake mistake;
+
         private void Awake()
         {
             animator = GetComponentInChildren<Animator>();
+            mistake = GetComponent<MistakeController>();
         }
 
         #region Event Handlers
@@ -33,6 +37,8 @@ namespace Game.Core
 
         private void OnMissedInput()
         {
+            mistake.CharacterHasMadeMistake();
+            
             if (isDancing)
             {
                 animator.SetTrigger("Idle");
