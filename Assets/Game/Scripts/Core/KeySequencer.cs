@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Game.Core.Enums;
+using Game.ScriptableObjects;
 
 namespace Game.Core
 {
     public class KeySequencer : MonoBehaviour
-    {
+    {   
         [SerializeField] private float keyMoveSpeed;
-        [SerializeField] private float timeBetweenKeys;
         [SerializeField] private RectTransform successPoint;
         [SerializeField] private RectTransform endPoint;
-        [Header("Prefabs")]
-        [SerializeField] private Key keyPrefab;
+        [SerializeField] private KeyDirection direction; 
+        [SerializeField] private float timeBetweenKeys;
+        
+        private Key keyPrefab;
+
+        public KeyDirection Direction => direction;
 
         public ObjectPool<Key> KeyPool { get; private set; }
 
@@ -31,6 +35,26 @@ namespace Game.Core
             KeyPool = new ObjectPool<Key>(
                 12,
                 CreateFunction: () => {
+                    switch (direction)
+                    {
+                        case KeyDirection.Up:
+                            direction = KeyDirection.Up;
+                            keyPrefab = Resources.Load<Key>("KeyUp");
+                            break; 
+                        case KeyDirection.Down:
+                            direction = KeyDirection.Down;
+                            keyPrefab = Resources.Load<Key>("KeyDown");
+                            break;
+                        case KeyDirection.Left:
+                            direction = KeyDirection.Left;
+                            keyPrefab = Resources.Load<Key>("KeyLeft");
+                            break;
+                        case KeyDirection.Right:
+                            direction = KeyDirection.Right;
+                            keyPrefab = Resources.Load<Key>("KeyRight");
+                            break;
+                    }
+                    
                     Key key = Instantiate(keyPrefab, transform);
                     key.sequencer = this;
 
@@ -59,9 +83,7 @@ namespace Game.Core
         {
             Key key = KeyPool.Pop();
 
-            KeyDirection direction = (KeyDirection)Random.Range(0, (int)KeyDirection.Count);
-
-            key.Init(direction, keyMoveSpeed, successPoint, endPoint.position);
+            key.Init(keyMoveSpeed, successPoint, endPoint.position);
 
             key.RectTransform.anchoredPosition = new Vector3(100f, 0f, 0f);
             key.gameObject.SetActive(true);

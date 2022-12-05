@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8666354419596176340}
   - component: {fileID: 8666354419596176342}
   m_Layer: 5
-  m_Name: Key
+  m_Name: KeyLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,9 +90,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe17a2da699484187d1df300f167ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 0
   backgroundImage: {fileID: 8666354419596176340}
   arrowTransform: {fileID: 8666354420178860646}
+  direction: 3
   sequencer: {fileID: 0}
 --- !u!1 &8666354420178860647
 GameObject:

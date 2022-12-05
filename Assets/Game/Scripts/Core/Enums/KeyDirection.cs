@@ -6,6 +6,5 @@ namespace Game.Core.Enums
         Right,
         Down,
         Left,
-        Count,
     }
 }

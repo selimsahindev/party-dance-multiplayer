@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using Game.Core.Enums;
 using Game.Events;
+using Image = UnityEngine.UI.Image;
 
 namespace Game.Core
 {
@@ -10,15 +10,14 @@ namespace Game.Core
     {
         [SerializeField] private Image backgroundImage;
         [SerializeField] private RectTransform arrowTransform;
+        [SerializeField] private KeyDirection direction;
         [HideInInspector] public KeySequencer sequencer;
         
         private RectTransform successArea;
         private Vector3 endPoint;
         private Color initialColor;
         
-        private KeyDirection direction;
 
-        private bool isPressed;
         private bool isSuccessful;
         private bool isReachedFailDistance;
 
@@ -45,10 +44,10 @@ namespace Game.Core
             CheckPosition();
         }
 
-        public void Init(KeyDirection direction, float moveSpeed, RectTransform successArea, Vector3 endPoint)
+        public void Init(float moveSpeed, RectTransform successArea, Vector3 endPoint)
         {
+            SetDirection();
             ResetToDefaults();
-            SetDirection(direction);
             
             this.moveSpeed = moveSpeed;
             this.successArea = successArea;
@@ -57,15 +56,13 @@ namespace Game.Core
 
         private void ResetToDefaults()
         {
-            isPressed = false;
             isSuccessful = false;
             isReachedFailDistance = false;
         }
 
-        private void SetDirection(KeyDirection direction)
+        private void SetDirection()
         {
-            this.direction = direction;
-            arrowTransform.rotation = Quaternion.Euler(0f, 0f, ((int)direction - 1) * -90f);
+            arrowTransform.rotation = Quaternion.Euler(0f, 0f, ((int)sequencer.Direction - 1) * -90f);
         }
 
         public void UpdatePosition()
@@ -109,17 +106,11 @@ namespace Game.Core
 
         private void ListenKeyPress()
         {
-            if (isPressed)
-            {
-                return;
-            }
-            
             if (direction == KeyDirection.Up    && Input.GetKeyDown(KeyCode.UpArrow)    ||
                 direction == KeyDirection.Right && Input.GetKeyDown(KeyCode.RightArrow) ||
                 direction == KeyDirection.Down  && Input.GetKeyDown(KeyCode.DownArrow)  ||
                 direction == KeyDirection.Left  && Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                isPressed = true;
                 HandleCorrectInput();
             }
             
@@ -128,7 +119,6 @@ namespace Game.Core
                 direction != KeyDirection.Down  && Input.GetKeyDown(KeyCode.DownArrow) ||
                 direction != KeyDirection.Left  && Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                isPressed = true;
                 HandleMissedInput();    
             }
         }

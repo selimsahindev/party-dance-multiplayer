@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Constants
+namespace Game.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "New Network", menuName = "Scriptables/Network Settings")]
     public class NetworkSettings : ScriptableObject

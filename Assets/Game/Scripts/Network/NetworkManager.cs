@@ -1,7 +1,7 @@
 using NativeWebSocket;
 using UnityEngine;
 using UnityEngine.Events;
-using Game.Constants;
+using Game.ScriptableObjects;
 
 namespace Game.Network
 {
