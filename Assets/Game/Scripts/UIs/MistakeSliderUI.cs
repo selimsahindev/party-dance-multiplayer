@@ -18,10 +18,25 @@ namespace Game.UI
             mistakeController = FindObjectOfType<MistakeController>();
         }
 
+        private void OnEnable()
+        {
+            mistakeController.OnEliminated += HandleOnEliminated;
+        }
+
         private void Update()
         {
             //The mistake count in here will come from later on server side
             _mistakeSlider.value = mistakeController.HealthMistakeCount;
+        }
+
+        private void OnDisable()
+        {
+            mistakeController.OnEliminated -= HandleOnEliminated;
+        }
+
+        public void HandleOnEliminated()
+        {
+            _mistakeSlider.value = 0;
         }
     }
 }

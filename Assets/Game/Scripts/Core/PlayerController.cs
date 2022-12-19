@@ -8,14 +8,27 @@ namespace Game.Core
     public class PlayerController : MonoBehaviour
     {
         private Animator animator;
+        
         private bool isDancing = false;
+        private bool canDance = false;
+
+        private int score;
 
         private IMistake mistake;
+        public bool CanDance { get; set; }
+
+        public bool IsDancing
+        {
+            get => isDancing;
+            set => isDancing = value;
+        }
+        public int Score => score;
 
         private void Awake()
         {
             animator = GetComponentInChildren<Animator>();
             mistake = GetComponent<MistakeController>();
+            canDance = true;
         }
 
         #region Event Handlers
@@ -28,7 +41,8 @@ namespace Game.Core
 
         private void OnSuccessfulMove()
         {
-            if (!isDancing)
+            score++;
+            if (!isDancing && canDance)
             {
                 animator.SetTrigger("Dance");
                 isDancing = true;
