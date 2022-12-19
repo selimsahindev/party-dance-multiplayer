@@ -8,13 +8,17 @@ namespace Game.Core
     public class KeySequencer : MonoBehaviour
     {
         [SerializeField] private float keyMoveSpeed;
-        [SerializeField] private float timeBetweenKeys;
+        [SerializeField] private float bpm;
         [SerializeField] private RectTransform successPoint;
         [SerializeField] private RectTransform endPoint;
         [Header("Prefabs")]
         [SerializeField] private Key keyPrefab;
 
+        private WaitForSeconds waitBetweenKeys;
         public ObjectPool<Key> KeyPool { get; private set; }
+
+        // TODO: DELETE LATER
+        public float KeyMoveSpeed => keyMoveSpeed;
 
         private void Awake()
         {
@@ -24,6 +28,7 @@ namespace Game.Core
         private void Start()
         {
             StartCoroutine(SpawnRoutine());
+            waitBetweenKeys = new WaitForSeconds(GetInterval());
         }
 
         private void PopulateArrowPool()
@@ -51,7 +56,7 @@ namespace Game.Core
             while (true)
             {
                 SpawnRandomKey();
-                yield return new WaitForSeconds(timeBetweenKeys);
+                yield return waitBetweenKeys;
             }
         }
 
@@ -65,6 +70,11 @@ namespace Game.Core
 
             key.RectTransform.anchoredPosition = new Vector3(100f, 0f, 0f);
             key.gameObject.SetActive(true);
+        }
+
+        private float GetInterval()
+        {
+            return 60f / bpm;
         }
     }
 }
